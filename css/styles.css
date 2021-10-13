@@ -1,0 +1,47 @@
+div {
+  margin-bottom: 20px;
+}
+.two {
+  background-color: blanchedalmond;
+}
+.three {
+  border: brown 3px solid;
+}
+.four {
+  background-color: rgb(211, 28, 15);
+  width: 100px;
+}
+.five {
+  background-color: rgb(25, 216, 66);
+  padding-bottom: 150px;
+}
+.block1 {
+  border: brown 3px solid;
+  border: 4px double black; /* Параметры границы */
+  padding: 10px;
+  width: 50px;
+  float: left;
+  height: 70px;
+}
+.block {
+  border: 4px double black; /* Параметры границы */
+  background: #fc3;
+  padding: 10px; /* Поля вокруг текста */
+  width: 50px;
+  float: left;
+}
+hr {
+  clear: both;
+}
+
+.orange {
+  padding: 5px;
+  color: #fff;
+  background: orange;
+  text-align: center;
+}
+.red {
+  padding: 5px;
+  color: #fff;
+  background: red;
+}
