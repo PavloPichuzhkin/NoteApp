@@ -3,13 +3,19 @@ const contInp = document.querySelector("#contInp");
 const dateInp = document.querySelector("#dateInp");
 const btn = document.querySelector("#btn");
 
-let note1 = ["13.10.2021", categInp.value, "Buy tomatoes, bread", "14.10.2021"];
-let note2 = ["13.10.2021", categInp.value, "Travel to Egypt", "30.10.2021"];
-
 let note = {
   note1: ["13.10.2021", categInp.value, "Buy tomatoes, bread", "14.10.2021"],
   note2: ["13.10.2021", categInp.value, "Travel to Egypt", "30.10.2021"],
+  note3: [
+    "13.10.2021",
+    categInp.value,
+    "To find new interesting film",
+    "14.10.2021",
+  ],
+  note4: ["13.10.2021", categInp.value, "change tyres", "15.10.2021"],
+  note5: ["13.10.2021", categInp.value, "maybe some sleep", "3"],
 };
+
 let tSumm = 0;
 let tAct = 0;
 let tArch = 0;
@@ -22,16 +28,10 @@ let rArch = 0;
 let s1 = document.querySelector(".s1");
 let s2 = document.querySelector(".s2");
 let s3 = document.querySelector(".s3");
-// let task = [s1.value, tSumm, tAct, (tSumm - tAct)];
-// let idea = [s2.value, iSumm, iAct, (iSumm - iAct)];
-// let randomThought = [s3.value, rSumm, rAct, (rSumm - rAct)];
 
 let out1 = document.querySelector("#out1");
 let out2 = document.querySelector("#out2");
 let out3 = document.querySelector("#out3");
-// let a = 3;
-// console.log(a+++3);
-// console.log(a);
 
 function tableCreate(not) {
   if (categInp.value == "Task") {
@@ -54,7 +54,7 @@ function tableCreate(not) {
   for (let j = 0; j < note.note1.length; j++) {
     td = tr.insertCell(); // где инициализируется td???????
     td.innerHTML = not[j];
-    td.style.width = "220px";
+    td.style.width = "230px";
     td.style.border = "1px solid black";
     td.setAttribute("id", `td${j}`);
   }
@@ -64,8 +64,11 @@ function tableCreate(not) {
 
   tableSummary();
 }
-tableCreate(note1);
-tableCreate(note2);
+tableCreate(note.note1);
+tableCreate(note.note2);
+tableCreate(note.note3);
+tableCreate(note.note4);
+tableCreate(note.note5);
 
 function tableSummary() {
   out2.innerHTML = "";
@@ -143,7 +146,7 @@ function addButt() {
     console.log(task);
     this.parentNode.parentNode.remove();
 
-    for (let j = 0; j < note1.length; j++) {
+    for (let j = 0; j < note.note1.length; j++) {
       td = tr.insertCell();
       td.innerHTML = noteAddArr()[j];
       td.style.width = "230px";
