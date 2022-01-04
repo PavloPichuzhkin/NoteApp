@@ -13,9 +13,7 @@
     <div>
         <h1>Notes List</h1>
         <h2></h2>
-    </div>
-    
-    
+    </div>    
     
     <div id="out">
         <div id="out1">
@@ -25,7 +23,7 @@
                     <option class="s3">Random Thought</option>
                 </select></label>
             <label> Content: <input type="text" id="contInp"></label>
-            <label> Dates: <input type="text" id="dateInp""></label>
+            <!-- <label> Dates: <input type="text" id="dateInp""></label> -->
                 <button id="btn">Create Note</button>
                 <table width="950px">
                     <tr>
@@ -53,13 +51,23 @@
         
         <div id="out3">
             <h2 id="arch">Archive</h2>
+            <table width="950px">
+                <tr>
+                    <td>Created</td>
+                    <td>Category</td>
+                    <td>Content</td>
+                    <td>Dates</td>
+                </tr>
+            </table>
+        <table></table>
         </div>
         </div>
     
 
     
     
-    <script src="script1.js" ></script>
-    <!-- type="module" -->
+    <script type="module" src="script1.js" ></script>
+    <script src="https://momentjs.com/downloads/moment.js"></script>
+    
 </body>
 </html>

@@ -1,257 +1,191 @@
-const categInp = document.querySelector("select");
-const contInp = document.querySelector("#contInp");
-const dateInp = document.querySelector("#dateInp");
-const btn = document.querySelector("#btn");
+import { parseDates, addDate } from "./parseDates.js";
 
-let note = {
-  note1: ["13.10.2021", categInp.value, "Buy tomatoes, bread", "14.10.2021"],
-  note2: ["13.10.2021", categInp.value, "Travel to Egypt", "30.10.2021"],
-  note3: [
-    "13.10.2021",
-    categInp.value,
-    "To find new interesting film",
-    "14.10.2021",
+export const categInp = document.querySelector("select");
+export const contInp = document.querySelector("#contInp");
+const btn = document.querySelector("#btn");
+const out1 = document.querySelector("#out1");
+const out2 = document.querySelector("#out2");
+const out3 = document.querySelector("#out3");
+export let idCounter = 3;
+
+export let noteApp = {
+  notes: [
+    {
+      id: 1,
+      created: "30.12.2021",
+      category: categInp.value,
+      content: "Buy tomatoes, bread 30.12.2021 and 31/12/2021",
+    },
+    {
+      id: 2,
+      created: "30.12.2021",
+      category: categInp.value,
+      content: "Travel to Egypt 05.01.2022",
+    },
   ],
-  note4: ["13.10.2021", categInp.value, "change tyres", "15.10.2021"],
-  note5: ["13.10.2021", categInp.value, "maybe some sleep", "3"],
+  archivedNotes: [],
 };
 
-let tSumm = 0;
-let tAct = 0;
-let tArch = 0;
-let iSumm = 0;
-let iAct = 0;
-let iArch = 0;
-let rSumm = 0;
-let rAct = 0;
-let rArch = 0;
-let s1 = document.querySelector(".s1");
-let s2 = document.querySelector(".s2");
-let s3 = document.querySelector(".s3");
-
-let out1 = document.querySelector("#out1");
-let out2 = document.querySelector("#out2");
-let out3 = document.querySelector("#out3");
-
-function tableCreate(not) {
-  if (categInp.value == "Task") {
-    tSumm++;
-    tAct++;
-    console.log(tSumm + "   Act " + tAct);
-  }
-  if (categInp.value == "Idea") {
-    iSumm++;
-    iAct++;
-    console.log(iSumm + "   Act " + iAct);
-  }
-  if (categInp.value == "Random Thought") {
-    rSumm++;
-    rAct++;
-    console.log(rSumm + "   Act " + rAct);
-  }
-  let tbl = document.createElement("table");
-  let tr = tbl.insertRow();
-  for (let j = 0; j < note.note1.length; j++) {
-    td = tr.insertCell(); // где инициализируется td???????
-    td.innerHTML = not[j];
-    td.style.width = "230px";
-    td.style.border = "1px solid black";
-    td.setAttribute("id", `td${j}`);
-  }
-  td = tr.insertCell();
-  addButt();
-  out1.append(tbl);
-
-  tableSummary();
-}
-tableCreate(note.note1);
-tableCreate(note.note2);
-tableCreate(note.note3);
-tableCreate(note.note4);
-tableCreate(note.note5);
-
-function tableSummary() {
-  out2.innerHTML = "";
-  task = [s1.value, tSumm, tAct, tSumm - tAct]; //как проинициализировался????
-  let idea = [s2.value, iSumm, iAct, iSumm - iAct];
-  let randomThought = [s3.value, rSumm, rAct, rSumm - rAct];
-  let tbl = document.createElement("table");
-  // let tr = tbl.insertRow();
-  function createSummary(arr) {
-    tr = tbl.insertRow();
-    for (let j = 0; j < arr.length; j++) {
-      td = tr.insertCell();
-      td.innerHTML = arr[j];
-      td.style.width = "230px";
-      td.style.border = "1px solid black";
-    }
-  }
-  createSummary(task);
-  createSummary(idea);
-  createSummary(randomThought);
-  out2.appendChild(tbl);
-  // console.log(out2.children);
-}
+out1.append(tableCreate(addDate(noteApp.notes), addButton));
 
 btn.addEventListener("click", () => {
-  tableCreate(noteAddArr());
+  addNote(noteApp);
+  updateTable(out1);
 });
 
-function noteAddArr() {
-  let noteAdd = [new Date()];
-  noteAdd.push(...[categInp.value, contInp.value, dateInp.value]);
-  return noteAdd;
+function addNote(notes) {
+  let newNote = {
+    id: idCounter++,
+    created: new Date(),
+    category: categInp.value,
+    content: contInp.value,
+  };
+  return (noteApp = { ...notes, notes: [...notes.notes, newNote] });
 }
 
-function addButt() {
-  const btn2 = document.createElement("button");
-  btn2.textContent = "Del";
-  td.append(btn2);
+function removeNote(deleteNoteId) {
+  noteApp = {
+    ...noteApp,
+    notes: [...noteApp.notes.filter((note) => note.id !== deleteNoteId)],
+  };
+  return noteApp;
+}
 
-  btn2.addEventListener("click", function () {
-    let tr = this.parentNode.parentNode;
-    let tdCateg = tr.querySelector("#td1");
-    tr.remove();
-    if (tdCateg.textContent == "Task") {
-      tSumm--;
-      if (btn5.style.display == "none") {
-        tAct--;
-      }
-      console.log(tSumm + "   Act " + tAct);
-    }
-    if (tdCateg.textContent == "Idea") {
-      iSumm--;
-      if (btn5.style.display == "none") {
-        iAct--;
-      }
-      console.log(iSumm + "   Act " + iAct);
-    }
-    if (tdCateg.textContent == "Random Thought") {
-      rSumm--;
-      if (btn5.style.display == "none") {
-        rAct--;
-      }
-      console.log(rSumm + "   Act " + rAct);
-    }
-    tableSummary();
+function removeNoteFromArchive(deleteNoteId) {
+  noteApp = {
+    ...noteApp,
+    archivedNotes: [
+      ...noteApp.archivedNotes.filter((note) => note.id !== deleteNoteId),
+    ],
+  };
+  return noteApp;
+}
+
+function editNote(editNoteId) {
+  let editNote = {
+    created: new Date(),
+    category: categInp.value,
+    content: contInp.value,
+  };
+  return (noteApp = {
+    ...noteApp,
+    notes: [
+      ...noteApp.notes.map((note) => {
+        if (note.id == editNoteId) {
+          // console.log(note);
+          return { ...note, ...editNote };
+        } else return note;
+      }),
+    ],
   });
-  const btn3 = document.createElement("button");
-  btn3.textContent = "Edit ";
-  td.appendChild(btn3);
-  btn3.addEventListener("click", function () {
-    let tr = this.parentNode.parentNode;
-    let tdCateg = tr.querySelector("#td1");
-    tr = this.parentNode.parentNode.parentElement.insertRow();
+}
 
-    console.log(task);
-    this.parentNode.parentNode.remove();
+function archiveNote(archiveNoteId) {
+  noteApp = {
+    ...noteApp,
+    archivedNotes: [
+      ...noteApp.archivedNotes,
+      ...noteApp.notes.filter((note) => note.id == archiveNoteId),
+    ],
+  };
+  removeNote(archiveNoteId);
+  return noteApp;
+}
 
-    for (let j = 0; j < note.note1.length; j++) {
-      td = tr.insertCell();
-      td.innerHTML = noteAddArr()[j];
-      td.style.width = "230px";
-      td.style.border = "1px solid black";
-      td.setAttribute("id", `td${j}`);
+function unzipNote(archiveNoteId) {
+  noteApp = {
+    ...noteApp,
+    notes: [
+      ...noteApp.notes,
+      ...noteApp.archivedNotes.filter((note) => note.id == archiveNoteId),
+    ],
+  };
+  removeNoteFromArchive(archiveNoteId);
+  return noteApp;
+}
+
+function tableCreate(notes, callButton) {
+  let tbl = document.createElement("table");
+  notes.map((note) => {
+    let tr = tbl.insertRow();
+    tr.setAttribute("id", `${note.id}`);
+    // tr.setAttribute("name", `${note.id}`);
+    for (let key in note) {
+      if (key !== "id") {
+        let td = tr.insertCell();
+        td.innerHTML = note[key];
+        td.style.width = "230px";
+        td.style.border = "1px solid black";
+        td.setAttribute("id", `td${key}`);
+      }
     }
-    td = tr.insertCell();
-    addButt();
-    if (tdCateg.textContent == categInp.value) return;
-    if (tdCateg.textContent == "Task" && categInp.value == "Idea") {
-      tSumm--;
-      tAct--;
-      iSumm++;
-      iAct++;
-      console.log(iSumm + "   Act " + iAct);
-    }
-    if (tdCateg.textContent == "Task" && categInp.value == "Random Thought") {
-      tSumm--;
-      tAct--;
-      rSumm++;
-      rAct++;
-      console.log(rSumm + "   Act " + rAct);
-    }
-    if (tdCateg.textContent == "Idea" && categInp.value == "Task") {
-      iSumm--;
-      iAct--;
-      tSumm++;
-      tAct++;
-      console.log(tSumm + "   Act " + rAct);
-    }
-    if (tdCateg.textContent == "Idea" && categInp.value == "Random Thought") {
-      iSumm--;
-      iAct--;
-      rSumm++;
-      rAct++;
-      console.log(rSumm + "   Act " + rAct);
-    }
-    if (tdCateg.textContent == "Random Thought" && categInp.value == "Task") {
-      rSumm--;
-      rAct--;
-      tSumm++;
-      tAct++;
-      console.log(tSumm + "   Act " + tAct);
-    }
-    if (tdCateg.textContent == "Random Thought" && categInp.value == "Idea") {
-      rSumm--;
-      rAct--;
-      iSumm++;
-      iAct++;
-      console.log(iSumm + "   Act " + iAct);
-    }
-    tableSummary();
+    callButton(tr);
   });
+  return tbl;
+}
+function updateTable(out, tableName = noteApp.notes, callButton = addButton) {
+  out.querySelectorAll("table")[1].remove();
+  out.append(tableCreate(addDate(tableName), callButton));
+}
 
-  const btn4 = document.createElement("button");
-  btn4.textContent = "Archive";
-  td.appendChild(btn4);
+function addButton(tr) {
+  const btnDel = document.createElement("button");
+  const btnEdit = document.createElement("button");
+  const btnArchive = document.createElement("button");
+  btnDel.textContent = "Delete";
+  btnEdit.textContent = "Edit";
+  btnArchive.textContent = "Archive";
 
-  btn4.addEventListener("click", function () {
-    let tr = this.parentNode.parentNode;
-    let tdCateg = tr.querySelector("#td1");
-    let tbl = this.parentElement.parentElement.parentNode.parentNode;
-    out3.append(tbl);
-    btn5.style.display = "inline";
-    btn4.style.display = "none";
-    btn3.style.display = "none";
-    if (tdCateg.textContent == "Task") {
-      tAct--;
-      console.log(tSumm + "   Act " + tAct);
-    }
-    if (tdCateg.textContent == "Idea") {
-      iAct--;
-      console.log(iSumm + "   Act " + iAct);
-    }
-    if (tdCateg.textContent == "Random Thought") {
-      rAct--;
-      console.log(rSumm + "   Act " + rAct);
-    }
-    tableSummary();
+  let td = tr.insertCell();
+  td.appendChild(btnDel);
+  td.appendChild(btnEdit);
+  td.appendChild(btnArchive);
+
+  btnDel.addEventListener("click", function () {
+    let deleteNoteId = +this.parentNode.parentNode.getAttribute("id");
+    // removeNote(deleteNoteId, noteApp["notes"]);
+    removeNote(deleteNoteId);
+    updateTable(out1);
+    // console.log(noteApp);
+    // console.log(noteApp["notes"]);
   });
-  const btn5 = document.createElement("button");
-  btn5.textContent = "Unzip";
-  btn5.style.display = "none";
-  td.appendChild(btn5);
+  btnEdit.addEventListener("click", function () {
+    let editNoteId = +this.parentNode.parentNode.getAttribute("id");
+    editNote(editNoteId);
+    updateTable(out1);
+    // console.log(noteApp);
+  });
+  btnArchive.addEventListener("click", function () {
+    let archiveNoteId = +this.parentNode.parentNode.getAttribute("id");
 
-  btn5.addEventListener("click", function () {
-    let tr = this.parentNode.parentNode;
-    let tdCateg = tr.querySelector("#td1");
-    let tbl = this.parentElement.parentElement.parentNode.parentNode;
-    out1.append(tbl);
-    btn4.style.display = "inline";
-    btn5.style.display = "none";
-    btn3.style.display = "inline";
-    if (tdCateg.textContent == "Task") {
-      tAct++;
-      console.log(tSumm + "   Act " + tAct);
-    }
-    if (tdCateg.textContent == "Idea") {
-      iAct++;
-      console.log(iSumm + "   Act " + iAct);
-    }
-    if (tdCateg.textContent == "Random Thought") {
-      rAct++;
-      console.log(rSumm + "   Act " + rAct);
-    }
-    tableSummary();
+    archiveNote(archiveNoteId);
+    updateTable(out1);
+
+    updateTable(out3, noteApp.archivedNotes, addButtonForArchive);
+  });
+}
+
+function addButtonForArchive(tr) {
+  const btnDel = document.createElement("button");
+  const btnUnzip = document.createElement("button");
+  btnDel.textContent = "Delete";
+  btnUnzip.textContent = "Unzip";
+
+  let td = tr.insertCell();
+  td.appendChild(btnDel);
+  td.appendChild(btnUnzip);
+
+  btnDel.addEventListener("click", function () {
+    let deleteNoteId = +this.parentNode.parentNode.getAttribute("id");
+    removeNoteFromArchive(deleteNoteId);
+    updateTable(out3, noteApp.archivedNotes, addButtonForArchive);
+    // console.log(noteApp);
+  });
+  btnUnzip.addEventListener("click", function () {
+    let archiveNoteId = +this.parentNode.parentNode.getAttribute("id");
+
+    unzipNote(archiveNoteId);
+    updateTable(out1);
+    updateTable(out3, noteApp.archivedNotes, addButtonForArchive);
   });
 }
